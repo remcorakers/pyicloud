@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from codecs import open
 
-REPO_URL = "https://github.com/picklepete/pyicloud"
+REPO_URL = "https://github.com/ndbroadbent/pyicloud"
 VERSION = "0.9.7"
 
 with open("requirements.txt") as f:
@@ -11,7 +11,7 @@ with open("README.rst", encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name="pyicloud",
+    name="pyicloud_ipd",
     version=VERSION,
     url=REPO_URL,
     download_url=REPO_URL + "/tarball/" + VERSION,
@@ -37,6 +37,6 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
-    entry_points={"console_scripts": ["icloud = pyicloud.cmdline:main"]},
+    entry_points={"console_scripts": ["icloud = pyicloud_ipd.cmdline:main"]},
     keywords=["icloud", "find-my-iphone"],
 )

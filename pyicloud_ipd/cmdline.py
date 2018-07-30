@@ -193,7 +193,7 @@ def main(args=None):
             parser.error("No password supplied")
 
         try:
-            api = PyiCloudService(username.strip(), password.strip())
+            api = pyicloud_ipd.PyiCloudService(username.strip(), password.strip())
             if (
                 not utils.password_exists_in_keyring(username)
                 and command_line.interactive
@@ -236,7 +236,7 @@ def main(args=None):
 
                 print("")
             break
-        except PyiCloudFailedLoginException:
+        except pyicloud_ipd.exceptions.PyiCloudFailedLoginException:
             # If they have a stored password; we just used it and
             # it did not work; let's delete it if there is one.
             if utils.password_exists_in_keyring(username):

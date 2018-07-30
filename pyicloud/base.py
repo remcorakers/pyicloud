@@ -10,13 +10,13 @@ from os import path, mkdir
 from re import match
 import http.cookiejar as cookielib
 
-from pyicloud.exceptions import (
+from pyicloud_ipd.exceptions import (
     PyiCloudFailedLoginException,
     PyiCloudAPIResponseException,
     PyiCloud2SARequiredException,
     PyiCloudServiceNotActivatedException,
 )
-from pyicloud.services import (
+from pyicloud_ipd.services import (
     FindMyiPhoneServiceManager,
     CalendarService,
     UbiquityService,
@@ -26,7 +26,7 @@ from pyicloud.services import (
     AccountService,
     DriveService,
 )
-from pyicloud.utils import get_password_from_keyring
+from pyicloud_ipd.utils import get_password_from_keyring
 
 
 LOGGER = logging.getLogger(__name__)
@@ -143,9 +143,9 @@ class PyiCloudService(object):
     authentication required to access iCloud services.
 
     Usage:
-        from pyicloud import PyiCloudService
+        from pyicloud_ipd import PyiCloudService
         pyicloud = PyiCloudService('username@apple.com', 'password')
-        pyicloud.iphone.location()
+        pyicloud_ipd.iphone.location()
     """
 
     HOME_ENDPOINT = "https://www.icloud.com"

@@ -3,7 +3,7 @@ import json
 
 from six import PY2, text_type
 
-from pyicloud.exceptions import PyiCloudNoDevicesException
+from pyicloud_ipd.exceptions import PyiCloudNoDevicesException
 
 
 class FindMyiPhoneServiceManager(object):

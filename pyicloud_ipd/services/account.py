@@ -3,7 +3,7 @@ from __future__ import division
 from six import PY2, python_2_unicode_compatible
 from collections import OrderedDict
 
-from pyicloud.utils import underscore_to_camelcase
+from pyicloud_ipd.utils import underscore_to_camelcase
 
 
 class AccountService(object):
