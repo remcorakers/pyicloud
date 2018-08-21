@@ -598,6 +598,16 @@ class PhotoAsset(object):
                     else:
                         version["type"] = None
 
+                    # Change live photo movie file extension to .MOV
+                    if (self.item_type == "image" and
+                        version["type"] == "com.apple.quicktime-movie"):
+                        if self.filename.lower().endswith('.heic'):
+                            version["filename"]=re.sub(
+                                '\.[^.]+$', '_HEVC.MOV', version["filename"])
+                        else:
+                            version["filename"] = re.sub(
+                                '\.[^.]+$', '.MOV', version["filename"])
+
                     self._versions[key] = version
 
         return self._versions
