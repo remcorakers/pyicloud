@@ -6,6 +6,13 @@ from six import PY2
 # fmt: off
 from six.moves.urllib.parse import urlencode  # pylint: disable=bad-option-value,relative-import
 # fmt: on
+from datetime import datetime
+from pyicloud_ipd.exceptions import PyiCloudServiceNotActivatedErrror
+from pyicloud_ipd.exceptions import PyiCloudAPIResponseError
+
+import pytz
+
+from future.moves.urllib.parse import urlencode
 
 from datetime import datetime
 from pyicloud.exceptions import PyiCloudServiceNotActivatedException
@@ -252,6 +259,7 @@ class PhotoAlbum(object):
         self.direction = direction
         self.query_filter = query_filter
         self.page_size = page_size
+        self.exception_handler = None
 
         self._len = None
 
@@ -303,6 +311,19 @@ class PhotoAlbum(object):
 
         return self._len
 
+    # Perform the request in a separate method so that we
+    # can mock it to test session errors.
+    def photos_request(self, offset):
+        url = ('%s/records/query?' % self.service._service_endpoint) + \
+            urlencode(self.service.params)
+        return self.service.session.post(
+            url,
+            data=json.dumps(self._list_query_gen(
+                offset, self.list_type, self.direction,
+                self.query_filter)),
+            headers={'Content-type': 'text/plain'}
+        )
+
     @property
     def photos(self):
         """Returns the album photos."""
@@ -311,19 +332,31 @@ class PhotoAlbum(object):
         else:
             offset = 0
 
-        while True:
-            url = ("%s/records/query?" % self.service.service_endpoint) + urlencode(
-                self.service.params
-            )
-            request = self.service.session.post(
-                url,
-                data=json.dumps(
-                    self._list_query_gen(
-                        offset, self.list_type, self.direction, self.query_filter
-                    )
-                ),
-                headers={"Content-type": "text/plain"},
-            )
+        exception_retries = 0
+
+        while(True):
+            try:
+                url = ("%s/records/query?" % self.service.service_endpoint) + urlencode(
+                    self.service.params
+                )
+                request = self.service.session.post(
+                    url,
+                    data=json.dumps(
+                        self._list_query_gen(
+                            offset, self.list_type, self.direction, self.query_filter
+                        )
+                    ),
+                    headers={"Content-type": "text/plain"},
+                )
+            except PyiCloudAPIResponseError as ex:
+                if self.exception_handler:
+                    exception_retries += 1
+                    self.exception_handler(ex, exception_retries)
+                    continue
+                else:
+                    raise
+
+            exception_retries = 0
             response = request.json()
 
             asset_records = {}
