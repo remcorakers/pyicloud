@@ -555,6 +555,12 @@ class PhotoAsset(object):
             self._master_record["fields"]["filenameEnc"]["value"]
         ).decode("utf-8")
 
+        # Some photos don't have a filename.
+        # In that case, just use the truncated fingerprint (hash),
+        # plus the correct extension.
+        filename = re.sub('[^0-9a-zA-Z]', '_', self.id)[0:12]
+        return '.'.join([filename, self.item_type_extension])
+
     @property
     def size(self):
         """Gets the photo size."""
@@ -589,6 +595,16 @@ class PhotoAsset(object):
             self._master_record["fields"]["resOriginalWidth"]["value"],
             self._master_record["fields"]["resOriginalHeight"]["value"],
         )
+
+    @property
+    def item_type_extension(self):
+        fields = self._master_record['fields']
+        if 'itemType' not in fields or 'value' not in fields['itemType']:
+            return 'unknown'
+        item_type = self._master_record['fields']['itemType']['value']
+        if item_type in self.ITEM_TYPE_EXTENSIONS:
+            return self.ITEM_TYPE_EXTENSIONS[item_type]
+        return 'unknown'
 
     @property
     def versions(self):
