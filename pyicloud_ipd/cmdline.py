@@ -12,8 +12,8 @@ import sys
 
 from click import confirm
 
-from pyicloud import PyiCloudService
-from pyicloud.exceptions import PyiCloudFailedLoginException
+from pyicloud_ipd import PyiCloudService
+from pyicloud_ipd.exceptions import PyiCloudFailedLoginException
 from . import utils
 
 
