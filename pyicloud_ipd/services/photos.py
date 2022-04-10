@@ -457,6 +457,7 @@ class PhotoAsset(object):
     }
 
     PHOTO_VERSION_LOOKUP = {
+        u"alternative": u"resOriginalAlt",
         u"original": u"resOriginal",
         u"medium": u"resJPEGMed",
         u"thumb": u"resJPEGThumb",
